@@ -3,7 +3,7 @@
 const products = [
     {name: "Carton of Cherries", price: "4.00", quantity: "0", productId: "100", image: "/images/cherry.jpg"},
     {name: "Bag of Oranges", price: "10.00", quantity: "0", productId: "101", image: "/images/orange.jpg"},
-    {name: "Carton of Strawberries", price: "5.00", quantity: "0", productId: "102", image: "/images/strawberry.jpg"}]
+    {name: "Carton of Strawberries", price: "5.00", quantity: "0", productId: "102", image: "/images/strawberry.jpg"}];
   
 /* Create 3 or more product objects using object literal notation 
    Each product should include five properties

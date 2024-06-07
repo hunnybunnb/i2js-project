@@ -1,9 +1,10 @@
 /* Create an array named products which you will use to add all of your product object literals that you create in the next step. */
 //products created for array
 const products = [
-    {name: "Carton of Cherries", price: "4.00", quantity: "0", productId: "100", image: "/images/cherry.jpg"},
-    {name: "Bag of Oranges", price: "10.00", quantity: "0", productId: "101", image: "/images/orange.jpg"},
-    {name: "Carton of Strawberries", price: "5.00", quantity: "0", productId: "102", image: "/images/strawberry.jpg"}];
+  {name: "Carton of Cherries", price: 4, quantity: 0, productId: 100, image: "./images/cherry.jpg"},
+  {name: "Bag of Oranges", price: 10, quantity: 0, productId: 101, image: "./images/orange.jpg"},
+  {name: "Carton of Strawberries", price: 5, quantity: 0, productId: 102, image: "./images/strawberry.jpg"}
+];
   
 /* Create 3 or more product objects using object literal notation 
    Each product should include five properties
@@ -22,19 +23,38 @@ const products = [
 
 /* Declare an empty array named cart to hold the items in the cart */
 //empty cart array to hold cart items
-const cart = [];
+let cart = [];
 
 /* Create a function named addProductToCart that takes in the product productId as an argument
   - addProductToCart should get the correct product based on the productId
   - addProductToCart should then increase the product's quantity
   - if the product is not already in the cart, add it to the cart
 */
+
 //adds products to the cart by productId
-function getProductByIdFromList(productId, productList) {
-  return productList.find((product) => product.productId === productId);
-  
-  let product = getProductByIdFromList(productId, products);
+function getProductById(productId) {
+  return products.find(product => product.id === productId);
 }
+
+function addProductToCart(productId) {
+  const product = getProductById(productId);
+    if(!product) {
+      console.log("Product with ID ${productId} not found.");
+    return;
+  }
+
+  //add product to cart and increase product quantity by 1
+const cartItem = cart.find(item => item.product.id === productId);
+  if(cartItem) {
+    cartItem.quantity += 1;
+    }  
+  
+    //increase by 1 if not in cart
+  else {
+    cart.push({ product, quantity: 1 });
+  }
+}
+
   
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
@@ -42,11 +62,14 @@ function getProductByIdFromList(productId, productList) {
 */
 //increases quantity of products in the cart
 function increaseQuantity(productId) {
-  const product = getProductById(productId, cart);
+  const cartItem = cart.find(item => item.product.id === productId);
+  if(cartItem) {
+    cartItem.quantity += 1;
+  }
+  else {
+    console.log("Product with ID ${productID} is not in the cart.");
+  }
 }
-  if (product) {
-    productId.quantity++;
-  };
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
   - decreaseQuantity should get the correct product based on the productId
@@ -54,15 +77,18 @@ function increaseQuantity(productId) {
   - if the function decreases the quantity to 0, the product is removed from the cart
 */
 //decreases quantity of products in the cart
-function decreaseQuantity(productId, decrement = 1) {
-  const product = getProductById(productId, cart);
-  if (productId !== -1) {
-    product.quantity -= decrement;
+function decreaseQuantity(productId) {
+  const cartItem = cart.find(item => item.product.id === productId);
+    if(cartItem) {
+      cartItem.quantity -= 1;
 
-    if (product.quantity <= 0) {
-      cart.splice(product, 1);
+      if(cartItem.quantity === 0) {
+        cart = cart.filter(item => item.product.id !== productId);
+      }
     }
-  };
+    else {
+      console.log("Product with ID ${productId} is not in the cart.");
+    }
 }
 
 /* Create a function named removeProductFromCart that takes in the productId as an argument
@@ -71,21 +97,25 @@ function decreaseQuantity(productId, decrement = 1) {
   - removeProductFromCart should remove the product from the cart
 */
 //removes product from cart completely by productId
-function removeProductFromCart(productId, productList) {
-  if (productId !== -1) {
-    cart.splice(productList, 1);
-};
+function removeProductFromCart(productId) {
+  const cartItem = cart.find(item => item.product.id !== productId);
+  if(cartItem) {
+    cartItem.quantity = 0;
+    cart = cart.filter(item => item.product.id !== productId);    
+  }
+    else {
+      console.log("Product with ID ${productId} is not in the cart.");
+    } 
 }
 
-/* Create a function named cartTotal that has no parameters
+/* Create a function named cartTotal that has no parameters 
   - cartTotal should iterate through the cart to get the total of all products
   - cartTotal should return the sum of the products in the cart
 */
 //sum of products in the cart
-function cartTotal(productId) {
-  return (total, productId) => {
-    return total + (price * product.quantity);
-  }
+function cartTotal() {
+  return cart.reduce((total, cartItem) => {
+    return total + cartItem.product.price * cartItem.quantity;}, 0);
 }
 
 /* Create a function called emptyCart that empties the products from the cart */
@@ -101,29 +131,11 @@ function emptyCart() {
 */
 //function to show amount to pay
 function pay(amount) {
-  const total = cartTotal();
-
-  if (amount >= total) {
-    const remaining = amount - total;
-  }
-}
-//variable to track the total amount paid
-let totalPaid = 0;
-
-  //difference between totalPaid and cartTotal
-  let remaining = 0;
-
-  //check if remaining amount is greater than or equal to zero
-  if (remaining >= 0) {
-    totalPaid = amount;
-    emptyCart()
+  const totalCost = cartTotal();
+    return amount - totalCost;
   }
 
-  //return the remaining (negative if payment is less than the cartTotal)
-  return (totalPaid >= amount);
-
-  return 0;
-
+//Some information contained was provided by ChatGPT, an AI language model developed by OpenAI. Accessed on 06/06/2024 from chat.openai.com.
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
 
 

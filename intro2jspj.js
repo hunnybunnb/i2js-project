@@ -31,30 +31,18 @@ let cart = [];
   - if the product is not already in the cart, add it to the cart
 */
 
-//adds products to the cart by productId
+//adds products to the cart by productId and increase by 1
 function getProductById(productId) {
-  return products.find(product => product.id === productId);
+  return products.find(product => product.productId === productId);
 }
 
 function addProductToCart(productId) {
-  const product = getProductById(productId);
-    if(!product) {
-      console.log("Product with ID ${productId} not found.");
-    return;
-  }
-
-  //add product to cart and increase product quantity by 1
-const cartItem = cart.find(item => item.product.id === productId);
-  if(cartItem) {
-    cartItem.quantity += 1;
-    }  
-  
-    //increase by 1 if not in cart
-  else {
-    cart.push({ product, quantity: 1 });
+  let product = getProductById(productId);
+  product.quantity += 1;
+  if(!cart.includes(product)) {
+      cart.push(product);
   }
 }
-
   
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
@@ -62,12 +50,9 @@ const cartItem = cart.find(item => item.product.id === productId);
 */
 //increases quantity of products in the cart
 function increaseQuantity(productId) {
-  const cartItem = cart.find(item => item.product.id === productId);
-  if(cartItem) {
-    cartItem.quantity += 1;
-  }
-  else {
-    console.log("Product with ID ${productID} is not in the cart.");
+  const product = cart.find(product => product.productId === productId);
+  if(product) {
+    product.quantity += 1;
   }
 }
 
@@ -78,16 +63,12 @@ function increaseQuantity(productId) {
 */
 //decreases quantity of products in the cart
 function decreaseQuantity(productId) {
-  const cartItem = cart.find(item => item.product.id === productId);
-    if(cartItem) {
-      cartItem.quantity -= 1;
-
-      if(cartItem.quantity === 0) {
-        cart = cart.filter(item => item.product.id !== productId);
-      }
-    }
+  const product = cart.find(product => product.productId === productId);
+  if(product.quantity === 1) {
+    removeProductFromCart(productId); 
+  }   
     else {
-      console.log("Product with ID ${productId} is not in the cart.");
+      product.quantity -= 1;
     }
 }
 
@@ -98,14 +79,11 @@ function decreaseQuantity(productId) {
 */
 //removes product from cart completely by productId
 function removeProductFromCart(productId) {
-  const cartItem = cart.find(item => item.product.id !== productId);
-  if(cartItem) {
-    cartItem.quantity = 0;
-    cart = cart.filter(item => item.product.id !== productId);    
+  const product = cart.find(product => product.productId === productId);
+  if(product) {
+    product.quantity = 0;
+    cart.splice(cart.indexOf(product), 1);   
   }
-    else {
-      console.log("Product with ID ${productId} is not in the cart.");
-    } 
 }
 
 /* Create a function named cartTotal that has no parameters 
@@ -115,7 +93,7 @@ function removeProductFromCart(productId) {
 //sum of products in the cart
 function cartTotal() {
   return cart.reduce((total, cartItem) => {
-    return total + cartItem.product.price * cartItem.quantity;}, 0);
+    return total + cartItem.price * cartItem.quantity;}, 0);
 }
 
 /* Create a function called emptyCart that empties the products from the cart */
@@ -130,9 +108,16 @@ function emptyCart() {
   - pay will return a positive number if money should be returned to customer
 */
 //function to show amount to pay
+let totalPaid = 0;
+
 function pay(amount) {
-  const totalCost = cartTotal();
-    return amount - totalCost;
+  totalPaid += amount;
+  let remaining = amount - totalPaid;
+  if(remaining >= 0) {
+    totalPaid = 0;
+    emptyCart()
+  }
+  return amount - totalPaid;
   }
 
 //Some information contained was provided by ChatGPT, an AI language model developed by OpenAI. Accessed on 06/06/2024 from chat.openai.com.

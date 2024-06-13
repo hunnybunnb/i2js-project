@@ -80,10 +80,8 @@ function decreaseQuantity(productId) {
 //removes product from cart completely by productId
 function removeProductFromCart(productId) {
   const product = cart.find(product => product.productId === productId);
-  if(product) {
-    product.quantity = 0;
-    cart.splice(cart.indexOf(product), 1);   
-  }
+  product.quantity = 0;
+  cart.splice(cart.indexOf(product), 1);   
 }
 
 /* Create a function named cartTotal that has no parameters 
@@ -112,12 +110,12 @@ let totalPaid = 0;
 
 function pay(amount) {
   totalPaid += amount;
-  let remaining = amount - totalPaid;
+  let remaining = totalPaid - cartTotal();
   if(remaining >= 0) {
     totalPaid = 0;
     emptyCart()
   }
-  return amount - totalPaid;
+  return remaining;
   }
 
 //Some information contained was provided by ChatGPT, an AI language model developed by OpenAI. Accessed on 06/06/2024 from chat.openai.com.
